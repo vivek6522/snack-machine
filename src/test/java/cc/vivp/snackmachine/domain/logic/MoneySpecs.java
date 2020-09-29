@@ -67,4 +67,16 @@ public class MoneySpecs {
     assertEquals(expectedAmount, money.amount());
   }
 
+  @ParameterizedTest
+  @CsvSource({ "1, 0, 0, 0, 0, 0, 0.01", "1, 2, 0, 0, 0, 0, 0.21", "0, 0, 3, 0, 0, 0, 0.75" })
+  @DisplayName("should allocate money correctly")
+  void givenAmountWhenAllocateMoneyThenDenominationsAreCorrect(int oneCentCount, int tenCentCount, int quarterCount,
+      int oneDollarCount, int fiveDollarCount, int twentyDollarCount, BigDecimal expectedAmount) {
+
+    Money money = new Money(10, 10, 10, 10, 10, 10);
+    Money expectedMoney = new Money(oneCentCount, tenCentCount, quarterCount, oneDollarCount, fiveDollarCount,
+        twentyDollarCount);
+
+    assertEquals(expectedMoney, money.allocate(expectedAmount));
+  }
 }

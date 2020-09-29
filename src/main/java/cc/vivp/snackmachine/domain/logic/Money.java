@@ -49,6 +49,32 @@ public class Money {
         + fiveDollarCount * 500 + twentyDollarCount * 2000);
   }
 
+  public Money allocate(BigDecimal amount) {
+
+    Preconditions.checkArgument(amount.compareTo(BigDecimal.ZERO) > 0, "money.allocate.negativeOrZero");
+
+    int twentyDollarCountToAllocate = Math.min(amount.divide(BigDecimal.valueOf(20L)).intValue(),
+        this.twentyDollarCount);
+    amount = amount.subtract(BigDecimal.valueOf(twentyDollarCountToAllocate * 20L));
+
+    int fiveDollarCountToAllocate = Math.min(amount.divide(BigDecimal.valueOf(5L)).intValue(), this.fiveDollarCount);
+    amount = amount.subtract(BigDecimal.valueOf(fiveDollarCountToAllocate * 5L));
+
+    int oneDollarCountToAllocate = Math.min(amount.intValue(), this.oneDollarCount);
+    amount = amount.subtract(BigDecimal.valueOf(oneDollarCountToAllocate * 1L));
+
+    int quarterCountToAllocate = Math.min(amount.divide(new BigDecimal("0.25")).intValue(), this.quarterCount);
+    amount = amount.subtract(new BigDecimal(String.valueOf(quarterCountToAllocate * 0.25)));
+
+    int tenCentCountToAllocate = Math.min(amount.divide(new BigDecimal("0.10")).intValue(), this.tenCentCount);
+    amount = amount.subtract(new BigDecimal(String.valueOf(tenCentCountToAllocate * 0.10)));
+
+    int oneCentCountToAllocate = Math.min(amount.divide(new BigDecimal("0.01")).intValue(), this.oneCentCount);
+
+    return new Money(oneCentCountToAllocate, tenCentCountToAllocate, quarterCountToAllocate, oneDollarCountToAllocate,
+        fiveDollarCountToAllocate, twentyDollarCountToAllocate);
+  }
+
   public static Money zero() {
     return new Money(0, 0, 0, 0, 0, 0);
   }
@@ -76,18 +102,6 @@ public class Money {
   public static Money twentyDollar() {
     return new Money(0, 0, 0, 0, 0, 1);
   }
-
-  // public static Money add(Money money1, Money money2) {
-  //   return new Money(money1.oneCentCount + money2.oneCentCount, money1.tenCentCount + money2.tenCentCount,
-  //       money1.quarterCount + money2.quarterCount, money1.oneDollarCount + money2.oneDollarCount,
-  //       money1.fiveDollarCount + money2.fiveDollarCount, money1.twentyDollarCount + money2.twentyDollarCount);
-  // }
-
-  // public static Money subtract(Money money1, Money money2) {
-  //   return new Money(money1.oneCentCount - money2.oneCentCount, money1.tenCentCount - money2.tenCentCount,
-  //       money1.quarterCount - money2.quarterCount, money1.oneDollarCount - money2.oneDollarCount,
-  //       money1.fiveDollarCount - money2.fiveDollarCount, money1.twentyDollarCount - money2.twentyDollarCount);
-  // }
 
   private static BigDecimal convertFromCents(int cents) {
     return new BigDecimal(cents).divide(BigDecimal.valueOf(100L));

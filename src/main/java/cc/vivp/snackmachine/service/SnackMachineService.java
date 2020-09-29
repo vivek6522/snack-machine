@@ -35,7 +35,7 @@ public class SnackMachineService {
     return fetchSnackMachine(id).doOnNext(SnackMachine::returnMoney);
   }
 
-  public Mono<SnackMachine> checkout(String id) {
-    return fetchSnackMachine(id).doOnNext(SnackMachine::buySnack);
+  public Mono<SnackMachine> checkout(String id, int position) {
+    return fetchSnackMachine(id).doOnNext(snackMachine -> snackMachine.buySnack(position));
   }
 }

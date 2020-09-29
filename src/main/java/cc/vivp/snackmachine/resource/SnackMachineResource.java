@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cc.vivp.snackmachine.domain.logic.SnackMachine;
 import cc.vivp.snackmachine.resource.mapper.MoneyMapper;
+import cc.vivp.snackmachine.resource.request.CheckoutRequest;
 import cc.vivp.snackmachine.resource.request.InsertMoneyRequest;
 import cc.vivp.snackmachine.service.SnackMachineService;
 import lombok.AllArgsConstructor;
@@ -39,8 +40,8 @@ public class SnackMachineResource {
   }
 
   @PostMapping("{id}/checkout")
-  public Mono<SnackMachine> checkout(@PathVariable String id) {
-    return snackMachineService.checkout(id);
+  public Mono<SnackMachine> checkout(@PathVariable String id, @RequestBody CheckoutRequest request) {
+    return snackMachineService.checkout(id, request.getPosition());
   }
 
 }
